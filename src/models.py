@@ -16,6 +16,7 @@ class User(db.Model):
         return {
             "id": self.id,
             "email": self.email,
+            
             # do not serialize the password, its a security breach
         }
     
@@ -87,7 +88,9 @@ class Fav(db.Model):
             "name": self.name,
             "user_id": self.user_id,
             "entity_type": self.entity_type,
-            "entity_id": self.entity_id
+            "entity_id": self.entity_id,
+            
+
             # do not serialize the password, its a security breach
         }
     

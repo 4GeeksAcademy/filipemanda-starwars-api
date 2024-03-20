@@ -56,7 +56,7 @@ def get_all_planets():
 
 
 @app.route('/favorites/<id>', methods=['GET'])
-def get_favorite(id):
+def get_single_favorite(id):
     # get a favorite by the user id
     all_faves = Fav.query.filter_by(user_id=id).all()
     print("all faves!!")
@@ -65,14 +65,32 @@ def get_favorite(id):
 
     return jsonify(response_body), 200
 
-@app.route('/user/<id>', methods=['GET'])
-def get_single_user(id):
+@app.route('/user/<email_in>', methods=['GET'])
+def get_single_user(email_in):
+    single_user = User.query.filter_by(email = email_in).first()
+    if single_user: 
+        print("single_user")
+        print(single_user)
+        result = single_user.serialize()
+        return jsonify(result), 200
+    else :
+        return "user does not exist", 404
 
-    single_user = User.query.get(id)
-    response_body = single_user.serialize()
+@app.route('/characters', methods=['GET'])
+def get_all_chars():
 
+    all_user = Character.query.all()
+    response_body = list(map(lambda x: x.serialize(), all_user))
     return jsonify(response_body), 200
 
+@app.route('/favorites', methods=['GET'])
+def get_all_favortires():
+
+    all_favorites = User.query.all()
+    response_body = list(map(lambda x: x.serialize(), all_favorites))
+
+
+    return jsonify(response_body), 200
 
 
 
@@ -86,14 +104,9 @@ def post_favorite(id):
     db.session.add(favorite)
     db.session.commit()
 
-    return jsonify(favorite), 200
+    return jsonify(new_favorite), 200
 
-@app.route('/characters/<id>', methods=['GET'])
-def get_all_chars():
 
-    all_user = Character.query.all()
-    response_body = list(map(lambda x: x.serialize(), all_user))
-    return jsonify(response_body), 200
 
 @app.route('/favorites/<id>', methods=['DELETE'])
 def delete_favorite(id):
